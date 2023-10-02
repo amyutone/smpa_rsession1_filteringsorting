@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Load the packages we'll need
 # Remember, think of this like packing for our trip
 # (We don't take the whole closet, only what we need)
+library(dplyr)
 library(tidyverse)
 library(lubridate)
 
@@ -48,11 +49,11 @@ impeach
 
 ```{r}
 
-** dasd
+# filter (impeach, for_impeachment == "NO")
 
+impeach %>% filter(for_impeachment == "NO")
 
-
-
+#%>%
 ```
 
 2) Filter to return only results where a member is both against impeachment, and comes from a district that President Trump won in 2016 (which is noted in the "p16winningparty" column).
@@ -60,6 +61,7 @@ impeach
 ```{r}
 
 
+impeach %>% filter(for_impeachment == "NO", p16winningparty == "R")
 
 
 
@@ -70,7 +72,7 @@ impeach
 ```{r}
 
 
-
+impeach %>% filter(for_impeachment == "NO", p16winningparty == "R", p12winningparty == "R")
 
 
 ```
@@ -79,7 +81,7 @@ impeach
 
 ```{r}
 
-
+impeach %>% filter(for_impeachment == "YES", date_month == 9)
 
 
 
@@ -89,7 +91,7 @@ impeach
 
 ```{r}
 
-
+impeach %>% filter(for_impeachment == "YES", clinton_percent >= 70)
 
 
 
@@ -101,7 +103,7 @@ bachelor's degree or higher ("pct_bachelors"), from lowest to highest.
 ```{r}
 
 
-
+impeach %>% arrange(clinton_percent >= 70, )
 
 
 
@@ -111,8 +113,14 @@ bachelor's degree or higher ("pct_bachelors"), from lowest to highest.
 
 ```{r}
 
+#impeach %>% filter(for_impeachment == "NO", pct_bachelors clinton_percent >= 70)
 
-
+qseven <- impeach %>% 
+  select(for_impeachment,pct_bachelors) %>% 
+  filter(for_impeachment == "NO") 
+qseven
+  
+qseven[order(qseven$pct_bachelors), ]
 
 
 ```
@@ -123,7 +131,12 @@ Then filter those records by only those whose bachelor's percentage is below the
 
 ```{r}
 
-
+qeight <- impeach %>% 
+  select(for_impeachment,pct_bachelors_compared_to_national) %>% 
+  filter(for_impeachment == "NO", pct_bachelors_compared_to_national == "BELOW") 
+qeight
+  
+qeight[order(qeight$pct_bachelors_compared_to_national), ]
 
 
 
@@ -134,7 +147,10 @@ Then filter those records by only those whose bachelor's percentage is below the
 
 ```{r}
 
-
+qnine <- impeach %>% 
+  select(for_impeachment,state) %>% 
+  filter(for_impeachment == "NO", state == "NJ") 
+qnine
 
 
 
@@ -143,9 +159,14 @@ Then filter those records by only those whose bachelor's percentage is below the
 10) Filter for those who were YES on impeachment, with a declared date prior to 2019. So only those with dates before 2019. Then sort those so that the highest Clinton vote percentages are at the top.
 
 ```{r}
+qten <- impeach %>% 
+  select(for_impeachment,date_year, clinton_percent) %>% 
+  filter(for_impeachment == "YES", date_year<2019) %>% 
+  arrange(desc(clinton_percent))
+qten
 
-
-
-
+#all columns except: party...DH<- impeach %>% 
+  #select(-party,-state,-for_impeachment)
+#DH
 
 ```
